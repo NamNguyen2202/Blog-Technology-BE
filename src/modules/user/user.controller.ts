@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserDto } from 'src/Dto/UserDto';
+import { SignUpDto } from 'src/Dto/UserDto';
 
 @Controller('user')
 export class UserController {
@@ -15,28 +15,13 @@ export class UserController {
     return this.userService.GetAllUserId();
   }
 
-  @Get(':userName')
+  @Get('check/:userName')
   CheckUserName(@Param('userName') userName: string) {
     return this.userService.CheckUserName(userName);
   }
 
-  @Post()
-  InsertUser(@Body() user: UserDto): Promise<UserDto> {
+  @Post('check/:sign')
+  InsertUser(@Body() user: SignUpDto): Promise<SignUpDto> {
     return this.userService.InsertUser(user);
   }
-
-  //   @Delete('/users/:id')
-  //   DeleteUserId(@Param('userId') userId: number) {
-  //     return this.userService.GetUserId(userId);
-  //   }
-
-  //   @Post('them')
-  //   Insert() {
-  //     return this.userService.Insert(9, 'HuyAA', 21);
-  //   }
-
-  //   @Post('themUser')
-  //   InsertUser(@Body() user: UserDto): Promise<UserDto> {
-  //     return this.userService.InsertUser(user);
-  //   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { UserDto } from '../../Dto/UserDto';
+import { SignUpDto } from '../../Dto/UserDto';
 
 @Injectable()
 export class UserService {
@@ -25,7 +25,7 @@ export class UserService {
     return result;
   }
 
-  InsertUser(user: UserDto): Promise<any> {
+  InsertUser(user: SignUpDto): Promise<any> {
     return this.dataSource.query(
       'INSERT INTO "Users" ("userName", phone, "password") VALUES($1, $2, $3);',
       [user.userName, user.phone, user.password],

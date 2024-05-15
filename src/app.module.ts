@@ -13,7 +13,7 @@ import { UserModule } from './modules/user/user.module';
       port: 5432,
       username: 'postgres',
       password: '171102',
-      database: 'Blog_Technology',
+      database: 'Blog_Technology_v1',
       // entities: [User], // Replace `User` with your entity class
       synchronize: true,
       autoLoadEntities: true,
