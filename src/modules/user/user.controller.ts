@@ -24,4 +24,13 @@ export class UserController {
   InsertUser(@Body() user: SignUpDto): Promise<SignUpDto> {
     return this.userService.InsertUser(user);
   }
+
+  @Get('check-signin/:username/:password')
+  async checkSignin(
+    @Param('username') username: string,
+    @Param('password') password: string,
+  ): Promise<{ isValid: boolean }> {
+    const isValid = await this.userService.CheckSignIn(username, password);
+    return { isValid };
+  }
 }
