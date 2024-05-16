@@ -26,9 +26,7 @@ export class UserController {
   }
 
   @Post('sign-in')
-  async checkSignIn(
-    @Body() body: SignInDto,
-  ): Promise<{ isValid: boolean }> {
+  async checkSignIn(@Body() body: SignInDto): Promise<{ isValid: boolean }> {
     const { userName, password } = body;
     const isValid = await this.userService.CheckSignIn(userName, password);
     return { isValid };
