@@ -1,9 +1,24 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
-  imports: [],
+  imports: [
+    UserModule,
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: '171102',
+      database: 'Blog_Technology_v1',
+      // entities: [User], // Replace `User` with your entity class
+      synchronize: true,
+      autoLoadEntities: true,
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
