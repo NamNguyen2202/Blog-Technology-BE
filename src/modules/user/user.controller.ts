@@ -15,7 +15,7 @@ export class UserController {
     return this.userService.GetAllUserId();
   }
 
-  @Get('/sign-up/:userName')
+  @Get('sign-up/:userName')
   CheckUserName(@Param('userName') userName: string) {
     return this.userService.CheckUserName(userName);
   }
