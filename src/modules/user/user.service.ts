@@ -39,4 +39,12 @@ export class UserService {
       [user.userName, user.phone, user.password],
     );
   }
+
+  async CheckSignIn(userName: string, password: string): Promise<boolean> {
+    const result = await this.dataSource.query(
+      'SELECT "userName" FROM "Users" WHERE "userName" = $1 AND "password" = $2',
+      [userName, password],
+    );
+    return result.length > 0;
+  }
 }
