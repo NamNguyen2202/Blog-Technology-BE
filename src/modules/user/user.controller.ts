@@ -25,11 +25,11 @@ export class UserController {
     return this.userService.InsertUser(user);
   }
 
-   @Post('sign-in/:username/:password')
+  @Post('sign-in')
   async checkSignIn(
-    @Body('username') username: string,
-    @Body('password') password: string,
+    @Body() body: { username: string; password: string },
   ): Promise<{ isValid: boolean }> {
+    const { username, password } = body;
     const isValid = await this.userService.CheckSignIn(username, password);
     return { isValid };
   }
