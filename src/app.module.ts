@@ -14,7 +14,6 @@ import { UserModule } from './modules/user/user.module';
       username: 'postgres',
       password: '123456',
       database: 'Blog_Technology',
-      // entities: [User], // Replace `User` with your entity class
       synchronize: true,
       autoLoadEntities: true,
     }),

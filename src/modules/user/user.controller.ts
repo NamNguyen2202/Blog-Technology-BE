@@ -25,10 +25,10 @@ export class UserController {
     return this.userService.InsertUser(user);
   }
 
-  @Get('check-signin/:username/:password')
-  async checkSignin(
-    @Param('username') username: string,
-    @Param('password') password: string,
+   @Post('sign-in/:username/:password')
+  async checkSignIn(
+    @Body('username') username: string,
+    @Body('password') password: string,
   ): Promise<{ isValid: boolean }> {
     const isValid = await this.userService.CheckSignIn(username, password);
     return { isValid };
