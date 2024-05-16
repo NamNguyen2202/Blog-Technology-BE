@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UserService } from './user.service';
-import { SignUpDto } from 'src/Dto/UserDto';
+import { SignInDto, SignUpDto } from 'src/Dto/UserDto';
 
 @Controller('user')
 export class UserController {
@@ -27,10 +27,10 @@ export class UserController {
 
   @Post('sign-in')
   async checkSignIn(
-    @Body() body: { username: string; password: string },
+    @Body() body: SignInDto,
   ): Promise<{ isValid: boolean }> {
-    const { username, password } = body;
-    const isValid = await this.userService.CheckSignIn(username, password);
+    const { userName, password } = body;
+    const isValid = await this.userService.CheckSignIn(userName, password);
     return { isValid };
   }
 }
