@@ -18,10 +18,18 @@ export class UserService {
   }
 
   CheckUserName(userName: string): Promise<boolean> {
-    const result = this.dataSource.query(
-      'SELECT * FROM "Users" WHERE "userName" = $1',
-      [userName],
-    );
+    const result = this.dataSource
+      .query('SELECT * FROM "Users" WHERE "userName" = $1', [userName])
+      .then((data) => {
+        if (data.length) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch(() => {
+        return false;
+      });
     return result;
   }
 

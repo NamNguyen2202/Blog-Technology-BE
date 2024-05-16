@@ -15,12 +15,12 @@ export class UserController {
     return this.userService.GetAllUserId();
   }
 
-  @Get('check/:userName')
+  @Get('/sign-up/:userName')
   CheckUserName(@Param('userName') userName: string) {
     return this.userService.CheckUserName(userName);
   }
 
-  @Post('check/:sign')
+  @Post('sign-up')
   InsertUser(@Body() user: SignUpDto): Promise<SignUpDto> {
     return this.userService.InsertUser(user);
   }

@@ -1,11 +1,4 @@
-import { IsString } from 'class-validator';
-
-export class UserDto {
-  readonly userId: number;
-  readonly userName: string;
-  readonly phone: string;
-  readonly password: string;
-}
+import { IsString } from "class-validator";
 
 export class SignUpDto {
   @IsString()
@@ -17,3 +10,5 @@ export class SignUpDto {
   @IsString()
   password: string;
 }
+
+
