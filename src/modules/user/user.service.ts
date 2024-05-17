@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { SignUpDto } from '../../Dto/UserDto';
+import { SignUpDto } from './UserDto';
 
 @Injectable()
 export class UserService {
@@ -33,10 +33,21 @@ export class UserService {
     return result;
   }
 
-  InsertUser(user: SignUpDto): Promise<any> {
-    return this.dataSource.query(
-      'INSERT INTO "Users" ("userName", phone, "password") VALUES($1, $2, $3);',
-      [user.userName, user.phone, user.password],
-    );
+  async InsertUser(
+    user: SignUpDto,
+  ): Promise<{ sessionId: boolean; userName?: string; seccess?: boolean }> {
+    try {
+      const data = await this.dataSource.query(
+        'INSERT INTO "Users" ("userName", phone, "password") VALUES($1, $2, $3) RETURNING "userName"',
+        [user.userName, user.phone, user.password],
+      );
+      if (data.length) {
+        return { sessionId: true, userName: user.userName, seccess: true };
+      } else {
+        return { sessionId: false };
+      }
+    } catch (error) {
+      return { sessionId: false };
+    }
   }
 }

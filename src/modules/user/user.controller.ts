@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UserService } from './user.service';
-import { SignUpDto } from 'src/Dto/UserDto';
+import { SignUpDto } from './UserDto';
 
 @Controller('user')
 export class UserController {
@@ -20,8 +20,10 @@ export class UserController {
     return this.userService.CheckUserName(userName);
   }
 
-  @Post('sign-up')
-  InsertUser(@Body() user: SignUpDto): Promise<SignUpDto> {
+  @Post()
+  async InsertUser(
+    @Body() user: SignUpDto,
+  ): Promise<{ sessionId: boolean; userName?: string; seccess?: boolean }> {
     return this.userService.InsertUser(user);
   }
 }
