@@ -21,7 +21,9 @@ export class UserController {
   }
 
   @Post('sign-up')
-  InsertUser(@Body() user: SignUpDto): Promise<SignUpDto> {
+  async InsertUser(
+    @Body() user: SignUpDto,
+  ): Promise<{ success: boolean; userName?: string; message?: string }> {
     return this.userService.InsertUser(user);
   }
 
