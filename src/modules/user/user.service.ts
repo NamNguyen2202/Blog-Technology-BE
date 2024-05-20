@@ -51,11 +51,21 @@ export class UserService {
     }
   }
 
-  async CheckSignIn(userName: string, password: string): Promise<boolean> {
+  async checkSignIn(
+    userName: string,
+    password: string,
+  ): Promise<{ success: boolean; userName?: string; message?: string }> {
     const result = await this.dataSource.query(
       'SELECT "userName" FROM "Users" WHERE "userName" = $1 AND "password" = $2',
       [userName, password],
     );
-    return result.length > 0;
+    if (result.length > 0) {
+      return { success: true, userName: result[0].userName };
+    } else {
+      return {
+        success: false,
+        message: 'Tên đăng nhập hoặc mật khẩu không đúng.',
+      };
+    }
   }
 }
