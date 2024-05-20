@@ -23,8 +23,7 @@ export class UserController {
   @Post('sign-up')
   async InsertUser(
     @Body() user: SignUpDto,
-  ): Promise<{ seccess: boolean; userName?: string; message?: boolean }> {
+  ): Promise<{ success: boolean; userName?: string; message?: string }> {
     return this.userService.InsertUser(user);
   }
-
 }
