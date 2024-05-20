@@ -35,14 +35,14 @@ export class UserService {
 
   async InsertUser(
     user: SignUpDto,
-  ): Promise<{ sessionId: boolean; userName?: string; seccess?: boolean }> {
+  ): Promise<{ sessionId: boolean; userName?: string; message?: boolean }> {
     try {
       const data = await this.dataSource.query(
         'INSERT INTO "Users" ("userName", phone, "password") VALUES($1, $2, $3) RETURNING "userName"',
         [user.userName, user.phone, user.password],
       );
       if (data.length) {
-        return { sessionId: true, userName: user.userName, seccess: true };
+        return { sessionId: true, userName: user.userName, message: true };
       } else {
         return { sessionId: false };
       }

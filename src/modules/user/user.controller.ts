@@ -20,7 +20,7 @@ export class UserController {
     return this.userService.CheckUserName(userName);
   }
 
-  @Post()
+  @Post('sign-up')
   async InsertUser(
     @Body() user: SignUpDto,
   ): Promise<{ sessionId: boolean; userName?: string; seccess?: boolean }> {
