@@ -6,12 +6,12 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Get('id/:categoryId')
-  GetAllPostId(@Param('categoryId') categoryId: number) {
+  GetAllPostId(@Param('categoryId') categoryId: number[]) {
     return this.postService.GetAllPostId(categoryId);
   }
 
-  @Get()
-  GetAllPost() {
-    return this.postService.GetAllPost();
-  }
+  // @Get()
+  // GetAllPost() {
+  //   return this.postService.GetAllPost();
+  // }
 }
