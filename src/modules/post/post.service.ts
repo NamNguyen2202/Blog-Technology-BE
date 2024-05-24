@@ -1,27 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
+import { IPost } from 'src/interfaces/post.interface';
 import { DataSource } from 'typeorm';
 
 @Injectable()
 export class PostService {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
-  async GetAllPostId(categoryIds: number[]): Promise<any[]> {
+  async GetAllPostId(categoryIds: number[]): Promise<IPost[]> {
     try {
-      let result;
+      let result: { rows: IPost[] | Promise<IPost[]> };
       if (categoryIds.length > 0) {
         // Nếu có categoryId, lọc bài viết theo danh sách categoryId
         const query = `
-          SELECT "postId", "postName", "content", "photo", "userId", "categoryId"
-          FROM "Post"
-          WHERE "categoryId" = ANY($1::int[])
+          SELECT p."postId", p."postName", p."content", p."photo", p."userId", c."categoryName"
+          FROM "Post" as p
+          JOIN "CategoryPost" as c
+          ON p."categoryId" = c."categoryId"
+          WHERE p."categoryId" = ANY($1::int[])
         `;
         result = await this.dataSource.query(query, [categoryIds]);
-      } else if (!categoryIds || categoryIds.length === 0) {
+      } else if (categoryIds.length === 0) {
         // Nếu không có categoryId, trả về toàn bộ bài viết
         const query = `
-          SELECT p."postId", p."postName", p."content", p."photo", p."userId", c."categoryName" 
-          FROM "Post" as p 
-          JOIN "CategoryPost" as c 
+          SELECT p."postId", p."postName", p."content", p."photo", p."userId", c."categoryName"
+          FROM "Post" as p
+          JOIN "CategoryPost" as c
           ON p."categoryId" = c."categoryId"
         `;
         result = await this.dataSource.query(query);
@@ -33,9 +36,16 @@ export class PostService {
     }
   }
 
-  // GetAllPost(): Promise<string> {
+  // GetPostID(categoryIds: number): Promise<IPost[]> {
   //   return this.dataSource.query(
-  //     'SELECT p."postId", p."postName", p."content", p."photo", p."userId", c."categoryName" FROM "Post" as p JOIN "CategoryPost" as c ON p."categoryId" = c."categoryId"',
+  //     'SELECT p."postId", p."postName", p."content", p."photo", p."userId", c."categoryName" FROM "Post" as p JOIN "CategoryPost" as c ON p."categoryId" = c."categoryId" where p."categoryId" = $1',
+  //     [categoryIds],
   //   );
   // }
+
+  GetAllPost(): Promise<string> {
+    return this.dataSource.query(
+      'SELECT p."postId", p."postName", p."content", p."photo", p."userId", c."categoryName" FROM "Post" as p JOIN "CategoryPost" as c ON p."categoryId" = c."categoryId"',
+    );
+  }
 }
