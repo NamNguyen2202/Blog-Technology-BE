@@ -5,4 +5,5 @@ export class PostDto {
   photo: string;
   userId?: number;
   categoryId?: number;
+  categoryName?: string;
 }

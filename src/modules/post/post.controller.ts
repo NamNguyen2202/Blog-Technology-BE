@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { PostService } from './post.service';
 import { IPost } from 'src/interfaces/post.interface';
 
@@ -13,11 +13,14 @@ export class PostController {
   //   return this.postService.GetAllPostId(id);
   // }
 
-  @Get('ids/:categoryIds')
+  @Get('ids')
   async GetAllPostId(
-    @Param('categoryIds') categoryIds: string,
+    @Query('categoryIds') categoryIds: string,
   ): Promise<IPost[]> {
-    const ids = categoryIds.split(',').map(Number);
+    let ids: number[] = [];
+    if (categoryIds && categoryIds.trim() !== '') {
+      ids = categoryIds.split(',').map(Number);
+    }
     return this.postService.GetAllPostId(ids);
   }
 

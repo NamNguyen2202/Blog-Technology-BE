@@ -9,9 +9,8 @@ export class PostService {
   async GetAllPostId(categoryIds: number[]): Promise<IPost[]> {
     try {
       let result: IPost[] | PromiseLike<IPost[]>;
-      if (!categoryIds || categoryIds.length === 0) {
+      if (categoryIds.length === 0) {
         console.log('Không có id nào:');
-        // Nếu có categoryId, lọc bài viết theo danh sách categoryId
         const query = `
         SELECT p."postId", p."postName", p."content", p."photo", p."userId", c."categoryName"
         FROM "Post" as p
