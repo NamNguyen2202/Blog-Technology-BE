@@ -1,4 +1,4 @@
-import { Body, Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { PostService } from './post.service';
 import { IPost } from 'src/interfaces/post.interface';
 
@@ -6,18 +6,24 @@ import { IPost } from 'src/interfaces/post.interface';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Get('id')
-  async GetAllPostId(@Body() categoryId: number[]): Promise<IPost[]> {
-    return this.postService.GetAllPostId(categoryId);
-  }
-
-  // @Get('id/:categoryId')
-  // GetPostID(@Param('categoryIds') categoryIds: number) {
-  //   return this.postService.GetPostID(categoryIds);
+  // @Get('id/:id')
+  // async GetAllPostId(@Param('id') id: number[]): Promise<IPost[]> {
+  //   // const categoryIds = id.split(',').map(Number);
+  //   console.log(id);
+  //   return this.postService.GetAllPostId(id);
   // }
 
-  @Get()
-  GetAllPost() {
-    return this.postService.GetAllPost();
+  @Get('ids/:categoryIds')
+  async GetAllPostId(
+    @Param('categoryIds') categoryIds: string,
+  ): Promise<IPost[]> {
+    const ids = categoryIds.split(',').map(Number);
+    return this.postService.GetAllPostId(ids);
   }
+
+  // @Get()
+  // GetAllPost() {
+  //   console.log(1);
+  //   return this.postService.GetAllPost();
+  // }
 }
