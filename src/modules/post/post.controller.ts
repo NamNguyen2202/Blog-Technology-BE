@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { PostService } from './post.service';
 import { IPost } from 'src/interfaces/post.interface';
 
@@ -15,5 +15,12 @@ export class PostController {
       ids = categoryIds.split(',').map(Number);
     }
     return this.postService.GetAllPostId(ids);
+  }
+
+  @Post('insertpost')
+  async insertPost(
+    @Body() post: IPost,
+  ): Promise<{ success: boolean; message?: string }> {
+    return this.postService.insertPost(post);
   }
 }

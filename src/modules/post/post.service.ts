@@ -36,6 +36,24 @@ export class PostService {
     }
   }
 
+  async insertPost(
+    post: IPost,
+  ): Promise<{ success: boolean; message?: string }> {
+    try {
+      const data = await this.dataSource.query(
+        'INSERT INTO public."Post" ("postName", "content", photo, "userId", "categoryId") VALUES ($1, $2, $3, $4, $5) RETURNING "postName"',
+        [post.postName, post.content, post.photo, post.userId, post.categoryId],
+      );
+      if (data.length > 0) {
+        return { success: true, message: 'Post created successfully' };
+      } else {
+        return { success: false, message: 'Failed to create post' };
+      }
+    } catch (error) {
+      return { success: false, message: 'Error creating post' };
+    }
+  }
+
   GetAllPost(): Promise<string> {
     return this.dataSource.query(
       'SELECT p."postId", p."postName", p."content", p."photo", p."userId", c."categoryName" FROM "Post" as p JOIN "CategoryPost" as c ON p."categoryId" = c."categoryId"',
