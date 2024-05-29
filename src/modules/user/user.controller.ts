@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 import { SignInDto, SignUpDto } from 'src/Dto/UserDto';
+import { ChangePasswordDto } from 'src/Dto/ChangePasswordDto';
 
 @Controller('user')
 export class UserController {
@@ -32,5 +33,13 @@ export class UserController {
     @Body() body: SignInDto,
   ): Promise<{ success: boolean; userName?: string; message?: string }> {
     return this.userService.checkSignIn(body.userName, body.password);
+  }
+
+  @Put('change-pass')
+  async changePass(
+    @Body() changePasswordDto: ChangePasswordDto,
+  ): Promise<{ success: boolean; message?: string }> {
+    const { userId, currentPassword, newPassword } = changePasswordDto;
+    return this.userService.changePass(userId, currentPassword, newPassword);
   }
 }

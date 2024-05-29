@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { SignUpDto } from '../../Dto/UserDto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -66,6 +67,42 @@ export class UserService {
         success: false,
         message: 'Tên đăng nhập hoặc mật khẩu không đúng.',
       };
+    }
+  }
+
+  async changePass(
+    userId: number,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<{ success: boolean; message?: string }> {
+    const userResult = await this.dataSource.query(
+      'SELECT "password" FROM "Users" WHERE "userId" = $1',
+      [userId],
+    );
+
+    if (userResult.length === 0) {
+      return { success: false, message: 'User not found' };
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      userResult[0].password,
+    );
+    if (!isPasswordValid) {
+      return { success: false, message: 'Current password is incorrect' };
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    const updateResult = await this.dataSource.query(
+      'UPDATE "Users" SET "password" = $1 WHERE "userId" = $2',
+      [hashedPassword, userId],
+    );
+
+    if (updateResult.affectedRows > 0) {
+      return { success: true, message: 'Password changed successfully' };
+    } else {
+      return { success: false, message: 'Failed to change password' };
     }
   }
 }
