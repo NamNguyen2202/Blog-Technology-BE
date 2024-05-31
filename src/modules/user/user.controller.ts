@@ -31,10 +31,20 @@ export class UserController {
   @Post('sign-in')
   async checkSignIn(
     @Body() body: SignInDto,
-  ): Promise<{ success: boolean; userName?: string; message?: string }> {
+  ): Promise<{ success: boolean; userId?:number;userName?: string; message?: string }> {
     return this.userService.checkSignIn(body.userName, body.password);
   }
 
+  
+  @Get('userId/:userName')
+  UserIdbyUserName(@Param('userName') userName: string) {
+    return this.userService.getUserIdByUserName(userName);
+  }
+
+  @Get('userName/:userId')
+  UserNamebyUserId(@Param('userId') userId: number) {
+    return this.userService.getUserNameByUserId(userId);
+  }
   @Put('change-pass')
   async changePass(
     @Body() changePasswordDto: ChangePasswordDto,

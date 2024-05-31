@@ -9,4 +9,8 @@ export class CategoryController {
   GetAllCategory() {
     return this.categoryService.GetAllCategory();
   }
+  @Get('all')
+  GetCategory() {
+    return this.categoryService.GetCategory();
+  }
 }
