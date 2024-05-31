@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { PostService } from './post.service';
 import { IPost } from 'src/interfaces/post.interface';
 
@@ -22,5 +22,10 @@ export class PostController {
     @Body() post: IPost,
   ): Promise<{ success: boolean; message?: string }> {
     return this.postService.insertPost(post);
+  }
+
+  @Get('user/:userId')
+  async getAllPostsForUser(@Param('userId') userId: number): Promise<IPost[]> {
+    return this.postService.getAllPostsForUser(userId);
   }
 }

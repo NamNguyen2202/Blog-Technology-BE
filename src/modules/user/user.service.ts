@@ -54,18 +54,61 @@ export class UserService {
   async checkSignIn(
     userName: string,
     password: string,
-  ): Promise<{ success: boolean; userName?: string; message?: string }> {
+  ): Promise<{
+    success: boolean;
+    userId?: number;
+    userName?: string;
+    message?: string;
+  }> {
     const result = await this.dataSource.query(
-      'SELECT "userName" FROM "Users" WHERE "userName" = $1 AND "password" = $2',
+      'SELECT "userName","userId" FROM "Users" WHERE "userName" = $1 AND "password" = $2',
       [userName, password],
     );
     if (result.length > 0) {
-      return { success: true, userName: result[0].userName };
+      return {
+        success: true,
+        userId: result.userId,
+        userName: result[0].userName,
+      };
     } else {
       return {
         success: false,
         message: 'Tên đăng nhập hoặc mật khẩu không đúng.',
       };
+    }
+  }
+
+  async getUserIdByUserName(userName: string): Promise<number | null> {
+    try {
+      const result = await this.dataSource.query(
+        'SELECT "userId" FROM "Users" WHERE "userName" = $1',
+        [userName],
+      );
+      if (result.length > 0) {
+        return result[0].userId;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching userId:', error);
+      return null;
+    }
+  }
+
+  async getUserNameByUserId(userId: number): Promise<string | null> {
+    try {
+      const result = await this.dataSource.query(
+        'SELECT "userName" FROM "Users" WHERE "userId" = $1',
+        [userId],
+      );
+      if (result.length > 0) {
+        return result[0].userId;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching userId:', error);
+      return null;
     }
   }
 

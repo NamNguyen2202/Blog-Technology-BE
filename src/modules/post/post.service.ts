@@ -59,4 +59,18 @@ export class PostService {
       'SELECT p."postId", p."postName", p."content", p."photo", p."userId", c."categoryName" FROM "Post" as p JOIN "CategoryPost" as c ON p."categoryId" = c."categoryId"',
     );
   }
+
+  async getAllPostsForUser(userId: number): Promise<IPost[]> {
+    try {
+      console.log(userId);
+      const query = `
+        SELECT * FROM "Post" WHERE "userId" = $1
+      `;
+      const result = await this.dataSource.query(query, [userId]);
+      return result;
+    } catch (err) {
+      console.error('Error executing query', err.stack);
+      throw new Error('Database Error');
+    }
+  }
 }

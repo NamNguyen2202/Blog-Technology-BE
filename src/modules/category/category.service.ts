@@ -10,4 +10,10 @@ export class CategoryService {
       'SELECT "categoryId", "categoryName" FROM "CategoryPost"',
     );
   }
+
+  GetCategory(): Promise<string> {
+    return this.dataSource.query(
+      'SELECT * FROM "CategoryPost"',
+    );
+  }
 }
