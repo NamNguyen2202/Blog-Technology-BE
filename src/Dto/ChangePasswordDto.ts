@@ -1,5 +1,12 @@
+import { IsString } from 'class-validator';
+
 export class ChangePasswordDto {
-  userId: number;
+  @IsString()
+  userName: string;
+
+  @IsString()
   currentPassword: string;
+
+  @IsString()
   newPassword: string;
 }

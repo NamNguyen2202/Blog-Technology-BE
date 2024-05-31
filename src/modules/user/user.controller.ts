@@ -39,7 +39,10 @@ export class UserController {
   async changePass(
     @Body() changePasswordDto: ChangePasswordDto,
   ): Promise<{ success: boolean; message?: string }> {
-    const { userId, currentPassword, newPassword } = changePasswordDto;
-    return this.userService.changePass(userId, currentPassword, newPassword);
+    return this.userService.changePass(
+      changePasswordDto.userName,
+      changePasswordDto.currentPassword,
+      changePasswordDto.newPassword,
+    );
   }
 }

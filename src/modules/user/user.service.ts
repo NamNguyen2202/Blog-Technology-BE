@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { SignUpDto } from '../../Dto/UserDto';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -71,38 +70,40 @@ export class UserService {
   }
 
   async changePass(
-    userId: number,
+    userName: string,
     currentPassword: string,
     newPassword: string,
   ): Promise<{ success: boolean; message?: string }> {
-    const userResult = await this.dataSource.query(
-      'SELECT "password" FROM "Users" WHERE "userId" = $1',
-      [userId],
-    );
+    try {
+      const userResult = await this.dataSource.query(
+        'SELECT "password" FROM "Users" WHERE "userName" = $1',
+        [userName],
+      );
+      if (userResult.length === 0) {
+        return { success: false, message: 'Không có user nào!!!' };
+      }
+      const storedPassword = userResult[0].password;
+      if (storedPassword !== currentPassword) {
+        return {
+          success: false,
+          message: 'Mật khẩu của bạn đã nhập không đúng',
+        };
+      }
+      const updateResult = await this.dataSource.query(
+        'UPDATE "Users" SET "password" = $1 WHERE "userName" = $2',
+        [newPassword, userName],
+      );
 
-    if (userResult.length === 0) {
-      return { success: false, message: 'User not found' };
-    }
-
-    const isPasswordValid = await bcrypt.compare(
-      currentPassword,
-      userResult[0].password,
-    );
-    if (!isPasswordValid) {
-      return { success: false, message: 'Current password is incorrect' };
-    }
-
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    const updateResult = await this.dataSource.query(
-      'UPDATE "Users" SET "password" = $1 WHERE "userId" = $2',
-      [hashedPassword, userId],
-    );
-
-    if (updateResult.affectedRows > 0) {
-      return { success: true, message: 'Password changed successfully' };
-    } else {
-      return { success: false, message: 'Failed to change password' };
+      if (updateResult) {
+        return { success: true, message: 'Mật khẩu đã thay đổi thành công' };
+      } else {
+        return { success: false, message: 'Thất bại khi thay đổi mật khẩu' };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: 'An error occurred while changing password',
+      };
     }
   }
 }

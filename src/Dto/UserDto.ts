@@ -1,4 +1,4 @@
-import { IsString } from "class-validator";
+import { IsString } from 'class-validator';
 
 export class SignUpDto {
   @IsString()
@@ -18,4 +18,3 @@ export class SignInDto {
   @IsString()
   password: string;
 }
-
