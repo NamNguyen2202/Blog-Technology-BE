@@ -68,4 +68,42 @@ export class UserService {
       };
     }
   }
+
+  async changePass(
+    userName: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<{ success: boolean; message?: string }> {
+    try {
+      const userResult = await this.dataSource.query(
+        'SELECT "password" FROM "Users" WHERE "userName" = $1',
+        [userName],
+      );
+      if (userResult.length === 0) {
+        return { success: false, message: 'Không có user nào!!!' };
+      }
+      const storedPassword = userResult[0].password;
+      if (storedPassword !== currentPassword) {
+        return {
+          success: false,
+          message: 'Mật khẩu của bạn đã nhập không đúng',
+        };
+      }
+      const updateResult = await this.dataSource.query(
+        'UPDATE "Users" SET "password" = $1 WHERE "userName" = $2',
+        [newPassword, userName],
+      );
+
+      if (updateResult) {
+        return { success: true, message: 'Mật khẩu đã thay đổi thành công' };
+      } else {
+        return { success: false, message: 'Thất bại khi thay đổi mật khẩu' };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: 'An error occurred while changing password',
+      };
+    }
+  }
 }
